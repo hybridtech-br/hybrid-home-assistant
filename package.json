@@ -1,0 +1,18 @@
+{
+  "name": "hybrid-home-assistant",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Local-first, AI-native and multilingual smart home platform.",
+  "packageManager": "pnpm@10.13.1",
+  "scripts": {
+    "dev": "pnpm --parallel --filter './apps/*' dev",
+    "build": "pnpm -r build",
+    "lint": "pnpm -r lint",
+    "test": "pnpm -r test",
+    "format": "prettier --write ."
+  },
+  "devDependencies": {
+    "prettier": "^3.6.2",
+    "typescript": "^5.8.3"
+  }
+}
