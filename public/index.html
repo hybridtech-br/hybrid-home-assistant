@@ -1,16 +1,60 @@
 <!doctype html>
 <html lang="pt-BR">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="theme-color" content="#07111f">
   <title>HYBRID Home Assistant</title>
-  <link rel="stylesheet" href="/styles.css" />
+  <link rel="stylesheet" href="/styles.css">
 </head>
 <body>
   <div class="app-shell">
-    <aside class="sidebar">
+    <aside class="sidebar" id="sidebar">
       <div class="brand">
-        <div class="brand-mark">⌂</div>
-        <div><strong>HYBRID</strong><span>HOME ASSISTANT</span></div>
+        <div class="brand-mark"><span>⌂</span></div>
+        <div><strong>HYBRID</strong><small>HOME ASSISTANT</small></div>
       </div>
-      <nav>
+      <nav id="navigation">
+        <button class="nav-item active" data-page="dashboard">⌂ <span>Dashboard</span></button>
+        <button class="nav-item" data-page="rooms">▦ <span>Ambientes</span></button>
+        <button class="nav-item" data-page="devices">◫ <span>Dispositivos</span></button>
+        <button class="nav-item" data-page="scenes">✦ <span>Cenas</span></button>
+        <button class="nav-item" data-page="energy">ϟ <span>Energia</span></button>
+        <button class="nav-item" data-page="ai">✧ <span>HYBRID AI</span></button>
+      </nav>
+      <div class="sidebar-footer">
+        <div class="profile"><div class="avatar">A</div><div><strong>Administrador</strong><small>Casa Principal</small></div></div>
+        <span class="version">v0.1.0 Alpha</span>
+      </div>
+    </aside>
+
+    <main class="main">
+      <header class="topbar">
+        <button class="menu-button" id="menuButton" aria-label="Abrir menu">☰</button>
+        <div><h1 id="pageTitle">Bom dia, Administrador! 👋</h1><p id="pageSubtitle">Sua casa está conectada e funcionando normalmente.</p></div>
+        <div class="top-actions"><span class="weather">☀ <strong>24°C</strong></span><button class="icon-button" id="themeButton" title="Alternar tema">◐</button></div>
+      </header>
+
+      <section class="page active" id="page-dashboard">
+        <div class="stats" id="stats"></div>
+        <div class="dashboard-grid">
+          <section class="panel span-2"><div class="panel-head"><div><h2>Ambientes</h2><p>Visão geral da residência</p></div><button class="text-button" data-go="rooms">Ver todos</button></div><div class="room-grid" id="roomGrid"></div></section>
+          <section class="panel"><div class="panel-head"><div><h2>Cenas favoritas</h2><p>Automações rápidas</p></div></div><div class="scene-list" id="sceneList"></div></section>
+          <section class="panel span-2"><div class="panel-head"><div><h2>Dispositivos</h2><p>Controle em tempo real</p></div><button class="text-button" data-go="devices">Gerenciar</button></div><div class="device-grid" id="deviceGrid"></div></section>
+          <section class="panel"><div class="panel-head"><div><h2>HYBRID AI</h2><p>Assistente residencial</p></div><span class="online-dot">Online</span></div><div class="ai-card"><div class="ai-orb">✧</div><p>“A casa está segura. O consumo está 8% menor que ontem.”</p><button class="primary-button" data-go="ai">Conversar com a IA</button></div></section>
+          <section class="panel span-2"><div class="panel-head"><div><h2>Consumo de energia</h2><p>Hoje, em kWh</p></div><span class="saving">↓ 8% vs. ontem</span></div><div class="chart" id="energyChart"></div></section>
+          <section class="panel"><div class="panel-head"><div><h2>Distribuição</h2><p>Por ambiente</p></div></div><div class="donut-wrap"><div class="donut"></div><div class="legend"><span><i class="blue"></i>Sala 35%</span><span><i class="orange"></i>Cozinha 25%</span><span><i class="purple"></i>Quarto 20%</span><span><i class="green"></i>Outros 20%</span></div></div></section>
+        </div>
+      </section>
+
+      <section class="page" id="page-rooms"><div class="section-intro"><h2>Ambientes</h2><p>Temperatura e dispositivos organizados por cômodo.</p></div><div class="room-grid large" id="allRooms"></div></section>
+      <section class="page" id="page-devices"><div class="section-intro"><h2>Dispositivos</h2><p>Controle todos os equipamentos conectados.</p></div><div class="filters" id="deviceFilters"><button class="chip active" data-filter="all">Todos</button><button class="chip" data-filter="Luz">Luzes</button><button class="chip" data-filter="Climatização">Climatização</button><button class="chip" data-filter="Acesso">Acesso</button><button class="chip" data-filter="Câmera">Câmeras</button></div><div class="device-grid large" id="allDevices"></div></section>
+      <section class="page" id="page-scenes"><div class="section-intro"><h2>Cenas</h2><p>Ative rotinas com um único toque.</p></div><div class="scene-cards" id="allScenes"></div></section>
+      <section class="page" id="page-energy"><div class="section-intro"><h2>Energia</h2><p>Monitore eficiência, tendências e economia.</p></div><div class="energy-layout"><section class="panel span-2"><div class="panel-head"><h2>Consumo diário</h2><span class="saving">12,4 kWh</span></div><div class="chart tall" id="energyChartLarge"></div></section><section class="panel"><h2>Meta mensal</h2><div class="goal"><strong>68%</strong><span>186 de 275 kWh</span></div><p class="muted">Mantendo o ritmo atual, você ficará 11% abaixo da meta.</p></section></div></section>
+      <section class="page" id="page-ai"><div class="section-intro"><h2>HYBRID AI</h2><p>Comandos naturais e recomendações inteligentes.</p></div><div class="ai-console"><div class="messages" id="messages"><div class="message assistant">Olá! Posso controlar dispositivos, ativar cenas e analisar o consumo da casa.</div></div><form id="aiForm"><input id="aiInput" placeholder="Ex.: desligue as luzes da sala" autocomplete="off"><button class="primary-button">Enviar</button></form></div></section>
+    </main>
+  </div>
+  <div class="toast" id="toast"></div>
+  <script src="/app.js"></script>
+</body>
+</html>
