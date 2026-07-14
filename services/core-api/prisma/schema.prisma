@@ -1,0 +1,25 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum UserProfile {
+  RESIDENT
+  INTEGRATOR
+}
+
+enum HomeHealthStatus {
+  PREPARING
+  HEALTHY
+  DEGRADED
+  OFFLINE
+}
+
+model User {
+  id        String      @id @default(cuid())
+  profile   UserProfile
+  createdAt DateTime    @default(now())
