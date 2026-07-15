@@ -1,0 +1,17 @@
+name: Funcionalidade
+description: Propor uma melhoria ou nova funcionalidade
+title: "[FEATURE] "
+labels: ["type: feature"]
+body:
+  - type: textarea
+    id: problem
+    attributes:
+      label: Problema ou oportunidade
+    validations:
+      required: true
+  - type: textarea
+    id: solution
+    attributes:
+      label: Solução proposta
+    validations:
+      required: true
