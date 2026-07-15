@@ -1,0 +1,30 @@
+name: Validate Repository
+
+on:
+  push:
+    branches: [main, develop]
+  pull_request:
+    branches: [main, develop]
+
+permissions:
+  contents: read
+
+jobs:
+  repository-validation:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Validate required files
+        shell: bash
+        run: |
+          set -euo pipefail
+          for file in README.md ROADMAP.md CHANGELOG.md CONTRIBUTING.md SECURITY.md; do
+            test -f "$file" || { echo "Missing $file"; exit 1; }
+          done
+      - name: Detect committed secrets
+        shell: bash
+        run: |
+          if git ls-files | grep -E '(^|/)(\.env|.*\.(pem|key|p12|pfx))$'; then
+            echo "Potential secret file committed."
+            exit 1
+          fi
