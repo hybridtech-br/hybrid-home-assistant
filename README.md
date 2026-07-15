@@ -1,18 +1,11 @@
-# HYBRID Home Assistant
+# hybrid-home-assistant
 
-Plataforma inteligente, local-first e multilíngue para automação residencial.
+Plataforma independente HYBRID Home Assistant.
 
-## Visão
+## Status
 
-O HYBRID Home Assistant será o núcleo inteligente da residência, combinando controle de dispositivos, automações, IA conversacional, segurança, eficiência energética e operação local mesmo sem internet.
+Projeto em estruturação inicial pelo HYBRID GitHub Bootstrap v2.
 
-## Princípios
+## Desenvolvimento
 
-- Local First
-- Cloud Optional
-- AI Native
-- Privacy by Design
-- Security First
-- API First
-- Plugin First
-- Mult
+Consulte `CONTRIBUTING.md`, `ROADMAP.md` e a documentação em `docs/`.
