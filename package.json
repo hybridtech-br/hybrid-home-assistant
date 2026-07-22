@@ -1,18 +1,25 @@
 {
   "name": "hybrid-home-assistant",
-  "version": "0.1.0",
+  "version": "0.1.0-alpha.2.3",
   "private": true,
   "description": "Local-first, AI-native and multilingual smart home platform.",
   "packageManager": "pnpm@10.13.1",
   "scripts": {
-    "dev": "pnpm --parallel --filter './apps/*' dev",
-    "build": "pnpm -r build",
-    "lint": "pnpm -r lint",
-    "test": "pnpm -r test",
-    "format": "prettier --write ."
+    "build": "pnpm --filter @hha/foundation build && pnpm --filter @hha/kernel build",
+    "format": "prettier --write .",
+    "format:check": "prettier --check .",
+    "lint": "pnpm --filter @hha/foundation build && pnpm -r lint",
+    "test": "pnpm --filter @hha/foundation build && pnpm -r test",
+    "typecheck": "pnpm --filter @hha/foundation build && pnpm -r typecheck",
+    "verify": "pnpm format:check && pnpm lint && pnpm typecheck && pnpm test && pnpm build"
   },
   "devDependencies": {
+    "@eslint/js": "^9.39.1",
+    "@types/node": "^24.10.1",
+    "eslint": "^9.39.1",
     "prettier": "^3.6.2",
-    "typescript": "^5.8.3"
+    "typescript": "^5.8.3",
+    "typescript-eslint": "^8.46.4",
+    "vitest": "^3.2.7"
   }
 }
