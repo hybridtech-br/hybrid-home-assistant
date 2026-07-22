@@ -1,3 +1,3 @@
-# Código de Conduta
+# Code of Conduct
 
-Colaboradores devem agir com respeito, profissionalismo, responsabilidade e foco na segurança dos produtos e usuários.
+Contribuições devem manter respeito, profissionalismo, honestidade técnica e foco na qualidade do produto.

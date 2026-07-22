@@ -1,18 +1,29 @@
 {
-  "name": "hybrid-home-assistant",
-  "version": "0.1.0",
+  "name": "hha-platform",
+  "version": "0.1.0-alpha.2.2",
   "private": true,
-  "description": "Local-first, AI-native and multilingual smart home platform.",
-  "packageManager": "pnpm@10.13.1",
+  "type": "module",
+  "description": "H²A Genesis Platform monorepo bootstrap",
+  "packageManager": "pnpm@10.12.1",
+  "engines": {
+    "node": ">=22.0.0"
+  },
   "scripts": {
-    "dev": "pnpm --parallel --filter './apps/*' dev",
     "build": "pnpm -r build",
-    "lint": "pnpm -r lint",
     "test": "pnpm -r test",
-    "format": "prettier --write ."
+    "typecheck": "pnpm --filter @hha/foundation build && pnpm -r typecheck",
+    "lint": "pnpm -r lint",
+    "format:check": "prettier --check .",
+    "format:write": "prettier --write .",
+    "verify": "pnpm format:check && pnpm lint && pnpm typecheck && pnpm test && pnpm build"
   },
   "devDependencies": {
-    "prettier": "^3.6.2",
-    "typescript": "^5.8.3"
+    "@eslint/js": "^9.29.0",
+    "@types/node": "^22.15.32",
+    "eslint": "^9.29.0",
+    "prettier": "^3.5.3",
+    "typescript": "^5.8.3",
+    "typescript-eslint": "^8.34.1",
+    "vitest": "^3.2.4"
   }
 }

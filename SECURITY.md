@@ -1,5 +1,3 @@
-# Política de Segurança
+# Security Policy
 
-Não publique vulnerabilidades em Issues públicas. Comunique incidentes pelos canais privados oficiais da HYBRID Tecnologia Inteligente.
-
-Nunca envie credenciais, tokens, chaves privadas ou dados pessoais para o repositório.
+Não publique vulnerabilidades em issues públicas. Registre segredos fora do repositório e nunca os inclua em logs, exemplos ou fixtures.
