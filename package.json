@@ -1,18 +1,14 @@
 {
   "name": "hybrid-home-assistant",
-  "version": "0.1.0",
+  "version": "0.1.0-alpha",
   "private": true,
-  "description": "Local-first, AI-native and multilingual smart home platform.",
-  "packageManager": "pnpm@10.13.1",
+  "description": "HYBRID Home Assistant - local-first smart home dashboard",
   "scripts": {
-    "dev": "pnpm --parallel --filter './apps/*' dev",
-    "build": "pnpm -r build",
-    "lint": "pnpm -r lint",
-    "test": "pnpm -r test",
-    "format": "prettier --write ."
+    "start": "node server.js",
+    "dev": "node --watch server.js",
+    "test": "node --test"
   },
-  "devDependencies": {
-    "prettier": "^3.6.2",
-    "typescript": "^5.8.3"
+  "engines": {
+    "node": ">=20"
   }
 }
