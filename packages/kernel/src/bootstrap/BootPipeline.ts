@@ -1,6 +1,6 @@
-import { BootReport } from './BootReport.js';
-import type { BootContext } from './BootContext.js';
-import type { BootStage } from './BootStage.js';
+import { BootReport } from "./BootReport.js";
+import type { BootContext } from "./BootContext.js";
+import type { BootStage } from "./BootStage.js";
 
 export class BootPipeline {
   constructor(private readonly stages: readonly BootStage[]) {}
@@ -10,15 +10,40 @@ export class BootPipeline {
 
     for (const stage of this.stages) {
       const start = Date.now();
+
       try {
         const result = await stage.execute(context);
-        report.addStage({id: stage.id,name: stage.name,success: result.success,durationMs: Date.now()-start,warnings:[...(result.warnings??[])],errors:[]});
-        if (!result.success && stage.policy.required) break;
+
+        report.addStage({
+          id: stage.id,
+          name: stage.name,
+          required: stage.policy.required,
+          success: result.success,
+          durationMs: Date.now() - start,
+          warnings: [...(result.warnings ?? [])],
+          errors: [],
+        });
+
+        if (!result.success && stage.policy.required) {
+          break;
+        }
       } catch (error) {
-        report.addStage({id: stage.id,name: stage.name,success:false,durationMs:Date.now()-start,warnings:[],errors:[error instanceof Error?error.message:String(error)]});
-        if (stage.policy.required) break;
+        report.addStage({
+          id: stage.id,
+          name: stage.name,
+          required: stage.policy.required,
+          success: false,
+          durationMs: Date.now() - start,
+          warnings: [],
+          errors: [error instanceof Error ? error.message : String(error)],
+        });
+
+        if (stage.policy.required) {
+          break;
+        }
       }
     }
+
     report.finish();
     return report;
   }
