@@ -30,9 +30,14 @@ export class BootEngine {
     const report = await pipeline.run(context);
     const failed = report.stageReports.some((stage) => !stage.success);
 
-    this.lifecycle.transitionTo(
-      failed ? KernelState.Failed : KernelState.Running,
-    );
+    if (failed) {
+      this.lifecycle.transitionTo(KernelState.Failed);
+      return report;
+    }
+
+    this.lifecycle.transitionTo(KernelState.Initializing);
+    this.lifecycle.transitionTo(KernelState.Starting);
+    this.lifecycle.transitionTo(KernelState.Running);
 
     return report;
   }
