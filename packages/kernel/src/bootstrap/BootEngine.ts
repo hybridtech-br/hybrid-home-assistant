@@ -28,16 +28,17 @@ export class BootEngine {
     });
     const pipeline = new BootPipeline(this.stages);
     const report = await pipeline.run(context);
-    const failed = report.stageReports.some((stage) => !stage.success);
 
-    if (failed) {
+    if (report.hasRequiredFailures) {
       this.lifecycle.transitionTo(KernelState.Failed);
       return report;
     }
 
     this.lifecycle.transitionTo(KernelState.Initializing);
     this.lifecycle.transitionTo(KernelState.Starting);
-    this.lifecycle.transitionTo(KernelState.Running);
+    this.lifecycle.transitionTo(
+      report.hasOptionalFailures ? KernelState.Degraded : KernelState.Running,
+    );
 
     return report;
   }
