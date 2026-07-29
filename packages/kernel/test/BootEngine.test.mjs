@@ -22,7 +22,10 @@ test("boots successfully and reaches Running", async () => {
 
   assert.equal(lifecycle.currentState, KernelState.Running);
   assert.equal(report.stageReports[0]?.id, "configuration");
+  assert.equal(report.stageReports[0]?.required, true);
   assert.equal(report.stageReports[0]?.success, true);
+  assert.equal(report.hasRequiredFailures, false);
+  assert.equal(report.hasOptionalFailures, false);
   assert.ok(report.finishedAt instanceof Date);
 });
 
@@ -69,13 +72,15 @@ test("stops after a failed required stage and reaches Failed", async () => {
 
   assert.equal(lifecycle.currentState, KernelState.Failed);
   assert.equal(laterStageExecuted, false);
+  assert.equal(report.hasRequiredFailures, true);
+  assert.equal(report.hasOptionalFailures, false);
   assert.deepEqual(
     report.stageReports.map((item) => item.id),
     ["configuration", "required-failure"],
   );
 });
 
-test("continues after a failed optional stage but marks boot as Failed", async () => {
+test("continues after a failed optional stage and reaches Degraded", async () => {
   const lifecycle = new LifecycleManager();
   let laterStageExecuted = false;
 
@@ -96,7 +101,9 @@ test("continues after a failed optional stage but marks boot as Failed", async (
   const report = await engine.start("testing");
 
   assert.equal(laterStageExecuted, true);
-  assert.equal(lifecycle.currentState, KernelState.Failed);
+  assert.equal(lifecycle.currentState, KernelState.Degraded);
+  assert.equal(report.hasRequiredFailures, false);
+  assert.equal(report.hasOptionalFailures, true);
   assert.deepEqual(
     report.stageReports.map((item) => item.id),
     ["configuration", "optional-failure", "later-stage"],
