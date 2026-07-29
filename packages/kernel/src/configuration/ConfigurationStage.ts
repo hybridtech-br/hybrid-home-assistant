@@ -14,7 +14,7 @@ export class ConfigurationStage implements BootStage {
   public async execute(context: BootContext): Promise<BootStageResult> {
     const configuration = await this.loader.load();
     this.validator.validate(configuration);
-    context.set("configuration", configuration);
+    context.configuration = configuration;
     return { success: true };
   }
 }
