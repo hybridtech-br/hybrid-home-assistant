@@ -1,3 +1,4 @@
+import type { KernelConfiguration } from "../configuration/Configuration.js";
 import type { LifecycleManager } from "../lifecycle/LifecycleManager.js";
 
 export type BootProfile = "minimal" | "standard" | "full";
@@ -14,12 +15,29 @@ export class BootContext {
   public readonly profile: BootProfile;
   public readonly lifecycle: LifecycleManager;
   private readonly values = new Map<string, unknown>();
+  private kernelConfiguration?: KernelConfiguration;
 
   public constructor(options: BootContextOptions) {
     this.lifecycle = options.lifecycle;
     this.profile = options.profile ?? "standard";
     this.bootId = options.bootId ?? BootContext.createBootId();
     this.startedAt = new Date();
+  }
+
+  public get configuration(): KernelConfiguration {
+    if (!this.kernelConfiguration) {
+      throw new Error("Kernel configuration is not available in the boot context.");
+    }
+
+    return this.kernelConfiguration;
+  }
+
+  public set configuration(configuration: KernelConfiguration) {
+    this.kernelConfiguration = configuration;
+  }
+
+  public get hasConfiguration(): boolean {
+    return this.kernelConfiguration !== undefined;
   }
 
   public set<T>(key: string, value: T): void {
