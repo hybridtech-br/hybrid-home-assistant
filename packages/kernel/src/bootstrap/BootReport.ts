@@ -1,6 +1,7 @@
 export interface BootStageReport {
   readonly id: string;
   readonly name: string;
+  readonly required: boolean;
   readonly success: boolean;
   readonly durationMs: number;
   readonly warnings: readonly string[];
@@ -33,5 +34,13 @@ export class BootReport {
 
   get stageReports(): readonly BootStageReport[] {
     return this.stages;
+  }
+
+  get hasRequiredFailures(): boolean {
+    return this.stages.some((stage) => stage.required && !stage.success);
+  }
+
+  get hasOptionalFailures(): boolean {
+    return this.stages.some((stage) => !stage.required && !stage.success);
   }
 }
