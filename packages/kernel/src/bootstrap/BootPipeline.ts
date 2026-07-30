@@ -3,17 +3,16 @@ import type { BootContext } from "./BootContext.js";
 import type { BootStage } from "./BootStage.js";
 
 export class BootPipeline {
-  constructor(private readonly stages: readonly BootStage[]) {}
+  public constructor(private readonly stages: readonly BootStage[]) {}
 
-  async run(context: BootContext): Promise<BootReport> {
-    const report = new BootReport(context.bootId, context.startedAt);
+  public async run(context: BootContext): Promise<BootReport> {
+    const report = new BootReport(context.bootId, context.startedAt, context.profile);
 
     for (const stage of this.stages) {
       const start = Date.now();
 
       try {
         const result = await stage.execute(context);
-
         report.addStage({
           id: stage.id,
           name: stage.name,
@@ -44,7 +43,6 @@ export class BootPipeline {
       }
     }
 
-    report.finish();
     return report;
   }
 }
