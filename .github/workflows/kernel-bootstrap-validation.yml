@@ -1,0 +1,57 @@
+name: Kernel Bootstrap Validation
+
+on:
+  push:
+    branches:
+      - feat/v0.1-bootstrap-foundation
+    paths:
+      - "packages/kernel/**"
+      - "package.json"
+      - "pnpm-lock.yaml"
+      - "pnpm-workspace.yaml"
+      - ".github/workflows/kernel-bootstrap-validation.yml"
+  pull_request:
+    paths:
+      - "packages/kernel/**"
+      - "package.json"
+      - "pnpm-lock.yaml"
+      - "pnpm-workspace.yaml"
+      - ".github/workflows/kernel-bootstrap-validation.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  validate-kernel-bootstrap:
+    name: Build, lint and test kernel
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Enable Corepack
+        run: corepack enable
+
+      - name: Set up pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 10.13.1
+          run_install: false
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: pnpm
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Lint kernel
+        run: pnpm --filter @hybrid/kernel lint
+
+      - name: Test kernel
+        run: pnpm --filter @hybrid/kernel test
