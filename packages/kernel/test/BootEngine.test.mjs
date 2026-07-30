@@ -30,6 +30,42 @@ test("boots successfully and reaches Running", async () => {
   assert.ok(report.durationMs >= 0);
 });
 
+test("creates the runtime KernelContext after a successful bootstrap", async () => {
+  const lifecycle = new LifecycleManager();
+  const engine = new BootEngine(lifecycle);
+
+  assert.equal(engine.hasContext, false);
+  assert.throws(
+    () => engine.currentContext,
+    /Kernel context is not available before a successful bootstrap/,
+  );
+
+  const report = await engine.start("full");
+  const context = engine.currentContext;
+
+  assert.equal(engine.hasContext, true);
+  assert.equal(context.bootId, report.bootId);
+  assert.equal(context.profile, "full");
+  assert.equal(context.lifecycle, lifecycle);
+  assert.equal(context.bootReport, report);
+  assert.ok(context.configuration);
+});
+
+test("does not create a KernelContext when required bootstrap fails", async () => {
+  const lifecycle = new LifecycleManager();
+  const engine = new BootEngine(lifecycle, [
+    stage({ id: "required-failure", execute: async () => ({ success: false }) }),
+  ]);
+
+  await engine.start("standard");
+
+  assert.equal(engine.hasContext, false);
+  assert.throws(
+    () => engine.currentContext,
+    /Kernel context is not available before a successful bootstrap/,
+  );
+});
+
 test("loads configuration before custom stages", async () => {
   const lifecycle = new LifecycleManager();
   let configurationWasAvailable = false;
@@ -80,7 +116,7 @@ test("stops after a failed required stage and reaches Failed", async () => {
   });
 
   const engine = new BootEngine(lifecycle, [requiredFailure, laterStage]);
-  const report = await engine.start("testing");
+  const report = await engine.start("standard");
 
   assert.equal(lifecycle.currentState, KernelState.Failed);
   assert.equal(report.finalState, KernelState.Failed);
@@ -122,6 +158,8 @@ test("continues after a failed optional stage and reaches Degraded", async () =>
   assert.equal(report.result, "degraded");
   assert.equal(report.summary.optionalFailures, 1);
   assert.equal(report.summary.warningCount, 1);
+  assert.equal(engine.hasContext, true);
+  assert.equal(engine.currentContext.bootReport, report);
   assert.deepEqual(
     report.stageReports.map((item) => item.id),
     ["configuration", "optional-failure", "later-stage"],
