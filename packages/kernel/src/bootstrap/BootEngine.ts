@@ -31,14 +31,19 @@ export class BootEngine {
 
     if (report.hasRequiredFailures) {
       this.lifecycle.transitionTo(KernelState.Failed);
+      report.finish(KernelState.Failed);
       return report;
     }
 
     this.lifecycle.transitionTo(KernelState.Initializing);
     this.lifecycle.transitionTo(KernelState.Starting);
-    this.lifecycle.transitionTo(
-      report.hasOptionalFailures ? KernelState.Degraded : KernelState.Running,
-    );
+
+    const finalState = report.hasOptionalFailures
+      ? KernelState.Degraded
+      : KernelState.Running;
+
+    this.lifecycle.transitionTo(finalState);
+    report.finish(finalState);
 
     return report;
   }
