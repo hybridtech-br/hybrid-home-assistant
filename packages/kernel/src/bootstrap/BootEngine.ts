@@ -1,4 +1,5 @@
 import { ConfigurationStage } from "../configuration/ConfigurationStage.js";
+import { KernelContext } from "../kernel/KernelContext.js";
 import { KernelState } from "../lifecycle/KernelState.js";
 import type { LifecycleManager } from "../lifecycle/LifecycleManager.js";
 import { BootContext, type BootProfile } from "./BootContext.js";
@@ -8,6 +9,7 @@ import type { BootStage } from "./BootStage.js";
 
 export class BootEngine {
   private readonly stages: readonly BootStage[];
+  private runtimeContext?: KernelContext;
 
   public constructor(
     private readonly lifecycle: LifecycleManager,
@@ -17,6 +19,18 @@ export class BootEngine {
       new ConfigurationStage(),
       ...stages.filter((stage) => stage.id !== "configuration"),
     ];
+  }
+
+  public get currentContext(): KernelContext {
+    if (!this.runtimeContext) {
+      throw new Error("Kernel context is not available before a successful bootstrap.");
+    }
+
+    return this.runtimeContext;
+  }
+
+  public get hasContext(): boolean {
+    return this.runtimeContext !== undefined;
   }
 
   public async start(profile: BootProfile = "standard"): Promise<BootReport> {
@@ -44,6 +58,14 @@ export class BootEngine {
 
     this.lifecycle.transitionTo(finalState);
     report.finish(finalState);
+
+    this.runtimeContext = new KernelContext({
+      bootId: context.bootId,
+      profile: context.profile,
+      configuration: context.configuration,
+      lifecycle: context.lifecycle,
+      bootReport: report,
+    });
 
     return report;
   }
